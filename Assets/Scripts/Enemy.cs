@@ -24,6 +24,7 @@ public class Enemy : MonoBehaviour
             _points[i] = transform.GetChild(i).position;
         }
     }
+    
     private void Update()
     {
         Vector3 target = _points[_currentPoint];
