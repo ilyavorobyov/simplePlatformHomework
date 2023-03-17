@@ -1,7 +1,13 @@
 using UnityEngine;
 
+[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Animator))]
 public class Player : MonoBehaviour
 {
+    private const string Jump = "Jump";
+    private const string Run = "Run";
+
     [SerializeField] private float _speed;
     [SerializeField] private float _jumpForce;
 
@@ -23,18 +29,18 @@ public class Player : MonoBehaviour
         {
             transform.Translate(Vector3.right * _speed * Time.deltaTime);
             _spriteRenderer.flipX = true;
-            _animator.SetTrigger("Run");
+            _animator.SetTrigger(Run);
         }
         if (Input.GetKey(KeyCode.A))
         {
             transform.Translate(Vector3.left * _speed * Time.deltaTime);
             _spriteRenderer.flipX = false;
-            _animator.SetTrigger("Run");
+            _animator.SetTrigger(Run);
         }
         if (Input.GetKey(KeyCode.W))
         {
             _rigidbody2D.AddForce(Vector2.up * _jumpForce);
-            _animator.SetTrigger("Jump");
+            _animator.SetTrigger(Jump);
         }
     }
 

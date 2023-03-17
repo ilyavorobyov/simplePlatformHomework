@@ -1,7 +1,11 @@
 using UnityEngine;
 
+[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(Animator))]
 public class Enemy : MonoBehaviour
 {
+    private const string Attack = "Attack";
+
     [SerializeField] private float _speed;
 
     private Animator _animator;
@@ -50,7 +54,7 @@ public class Enemy : MonoBehaviour
     {
         if (collision.TryGetComponent<Player>(out Player player))
         {
-            _animator.SetTrigger("Attack");
+            _animator.SetTrigger(Attack);
         }
     }
 }
