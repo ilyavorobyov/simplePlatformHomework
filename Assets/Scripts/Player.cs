@@ -10,6 +10,8 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float _speed;
     [SerializeField] private float _jumpForce;
+    [SerializeField] private int _health;
+    [SerializeField] private int _damage;
 
     private SpriteRenderer _spriteRenderer;
     private Rigidbody2D _rigidbody2D;
@@ -52,5 +54,28 @@ public class Player : MonoBehaviour
             Debug.Log($"У игрока {_wallet} монет");
             Destroy(coin.gameObject);
         }
+
+        if (collision.TryGetComponent<Enemy>(out Enemy enemy))
+        {
+            enemy.TakeDamage(_damage);
+        }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        _health -= damage;
+        Debug.Log(_health);
+
+        if (_health <= 0)
+        {
+            Debug.Log("игрок погиб");
+            Time.timeScale = 0;
+        }
+    }
+
+    public void AddHealth(int addingHealth)
+    {
+        _health += addingHealth;
+        Debug.Log($"Игрок прибавил {addingHealth} к здоровью");
     }
 }

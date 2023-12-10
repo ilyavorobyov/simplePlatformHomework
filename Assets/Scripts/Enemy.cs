@@ -7,6 +7,8 @@ public class Enemy : MonoBehaviour
     private const string Attack = "Attack";
 
     [SerializeField] private float _speed;
+    [SerializeField] private int _damage;
+    [SerializeField] private int _health;
 
     private Animator _animator;
     private SpriteRenderer _spriteRenderer;
@@ -55,7 +57,21 @@ public class Enemy : MonoBehaviour
     {
         if (collision.TryGetComponent<Player>(out Player player))
         {
+            player.TakeDamage(_damage);
             _animator.SetTrigger(Attack);
+        }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        _health -= damage;
+        Debug.Log(_health);
+        Debug.Log($"Игрок нанёс {damage} урона врагу");
+
+        if (_health <= 0)
+        {
+            Debug.Log("враг погиб");
+            Destroy(gameObject);
         }
     }
 }
