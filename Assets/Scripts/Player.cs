@@ -56,7 +56,6 @@ public class Player : MonoBehaviour
         if (collision.TryGetComponent<Coin>(out Coin coin))
         {
             _wallet += coin.CoinPar;
-            Debug.Log($"У игрока {_wallet} монет");
             Destroy(coin.gameObject);
         }
 
@@ -85,11 +84,9 @@ public class Player : MonoBehaviour
     public void TakeDamage(int damage)
     {
         _health -= damage;
-        Debug.Log(_health);
 
         if (_health <= 0)
         {
-            Debug.Log("игрок погиб");
             Time.timeScale = 0;
         }
     }
@@ -97,7 +94,6 @@ public class Player : MonoBehaviour
     public void AddHealth(int addingHealth)
     {
         _health += addingHealth;
-        Debug.Log($"Игрок прибавил {addingHealth} к здоровью");
     }
 
     private IEnumerator AttackEnemy(Enemy enemy)
