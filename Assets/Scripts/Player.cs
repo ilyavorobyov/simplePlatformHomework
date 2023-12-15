@@ -4,22 +4,23 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(Health))]
 public class Player : MonoBehaviour
 {
+    [SerializeField] private float _attackCooldown;
+    [SerializeField] private float _speed;
+    [SerializeField] private float _jumpForce;
+    [SerializeField] private int _damage;
+
     private const string JumpAnimationName = "Jump";
     private const string RunAnimationName = "Run";
     private const string AttackAnimationName = "Attack";
-
-    [SerializeField] private float _attack—ooldown;
-    [SerializeField] private float _speed;
-    [SerializeField] private float _jumpForce;
-    [SerializeField] private int _health;
-    [SerializeField] private int _damage;
 
     private int _wallet = 0;
     private SpriteRenderer _spriteRenderer;
     private Rigidbody2D _rigidbody2D;
     private Animator _animator;
+    private Health _health;
     private Coroutine _attackEnemy;
     private bool _isAttacking;
 
@@ -28,6 +29,7 @@ public class Player : MonoBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
+        _health = GetComponent<Health>();
     }
 
     private void Update()
@@ -83,22 +85,17 @@ public class Player : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        _health -= damage;
-
-        if (_health <= 0)
-        {
-            Time.timeScale = 0;
-        }
+        _health.TakeDamage(damage);
     }
 
     public void AddHealth(int addingHealth)
     {
-        _health += addingHealth;
+        _health.AddHealth(addingHealth); 
     }
 
     private IEnumerator AttackEnemy(Enemy enemy)
     {
-        var waitForSeconds = new WaitForSeconds(_attack—ooldown);
+        var waitForSeconds = new WaitForSeconds(_attackCooldown);
 
         while (_isAttacking)
         {

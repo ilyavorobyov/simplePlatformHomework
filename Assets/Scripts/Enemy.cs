@@ -1,21 +1,24 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(Health))]
 public class Enemy : MonoBehaviour
 {
-    private const string AttackAnimationName = "Attack";
-
     [SerializeField] private float _speed;
-    [SerializeField] private float _attack—ooldown;
+    [SerializeField] private float _attackCooldown;
     [SerializeField] private int _damage;
-    [SerializeField] private int _health;
+
+    private const string AttackAnimationName = "Attack";
 
     private Animator _animator;
     private SpriteRenderer _spriteRenderer;
     private Player _player;
-    private Vector3[] _points;
+    private Health _health;
+    private List<Vector3> _points;
+    private Transform[] _allChild;
     private Vector3 _target;
     private float _playerDistance;
     private float _viewDistance = 6;
@@ -29,12 +32,22 @@ public class Enemy : MonoBehaviour
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
-        _points = new Vector3[transform.childCount];
+        _health = GetComponent<Health>();
+        _allChild = new Transform[transform.childCount];
+        _points = new List<Vector3>();
         _isMoving = true;
 
         for (int i = 0; i < transform.childCount; i++)
         {
-            _points[i] = transform.GetChild(i).position;
+            _allChild[i] = gameObject.transform.GetChild(i);
+        }
+
+        foreach (var child in _allChild)
+        {
+            if (child.transform.TryGetComponent(out TargetPoint targetPoint))
+            {
+                _points.Add(targetPoint.transform.position);
+            }
         }
     }
 
@@ -44,13 +57,14 @@ public class Enemy : MonoBehaviour
         {
             _target = _points[_currentPoint];
             RotateSprite();
-            transform.position = Vector3.MoveTowards(transform.position, _target, _speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, _target, _speed
+                * Time.deltaTime);
 
             if (transform.position == _target)
             {
                 _currentPoint++;
 
-                if (_currentPoint >= _points.Length)
+                if (_currentPoint >= _points.Count)
                 {
                     _currentPoint = 0;
                 }
@@ -61,7 +75,8 @@ public class Enemy : MonoBehaviour
         {
             _target = _player.transform.position;
             RotateSprite();
-            transform.position = Vector3.MoveTowards(transform.position, _target, _speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, _target, _speed
+                * Time.deltaTime);
         }
 
         _playerDistance = Vector3.Distance(_player.transform.position, transform.position);
@@ -111,12 +126,7 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        _health -= damage;
-
-        if (_health <= 0)
-        {
-            Destroy(gameObject);
-        }
+        _health.TakeDamage(damage);
     }
 
     private void RotateSprite()
@@ -133,7 +143,7 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator AttackPlayer()
     {
-        var waitForSeconds = new WaitForSeconds(_attack—ooldown);
+        var waitForSeconds = new WaitForSeconds(_attackCooldown);
 
         while (_isAttacking)
         {
