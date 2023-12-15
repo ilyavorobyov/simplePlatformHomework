@@ -17,12 +17,12 @@ public class HealthSmoothSliderView : MonoBehaviour
 
     private void OnEnable()
     {
-        _health.HealthChange += OnChangeSliderValue;
+        _health.HealthChanged += OnChangeSliderValue;
     }
 
     private void OnDisable()
     {
-        _health.HealthChange -= OnChangeSliderValue;
+        _health.HealthChanged -= OnChangeSliderValue;
     }
 
     private void OnChangeSliderValue()

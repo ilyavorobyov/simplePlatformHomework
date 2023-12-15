@@ -40,12 +40,14 @@ public class Player : MonoBehaviour
             _spriteRenderer.flipX = true;
             _animator.SetTrigger(RunAnimationName);
         }
+
         if (Input.GetKey(KeyCode.A))
         {
             transform.Translate(Vector3.left * _speed * Time.deltaTime);
             _spriteRenderer.flipX = false;
             _animator.SetTrigger(RunAnimationName);
         }
+
         if (Input.GetKey(KeyCode.W))
         {
             _rigidbody2D.AddForce(Vector2.up * _jumpForce);

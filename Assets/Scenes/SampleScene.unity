@@ -1180,6 +1180,7 @@ GameObject:
   - component: {fileID: 1524264764}
   - component: {fileID: 1524264765}
   - component: {fileID: 1524264767}
+  - component: {fileID: 1524264768}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1343,7 +1344,7 @@ MonoBehaviour:
   _attackCooldown: 2
   _speed: 3
   _jumpForce: 3
-  _damage: 20
+  _damage: 2
 --- !u!95 &1524264765
 Animator:
   serializedVersion: 5
@@ -1378,6 +1379,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _health: 100
+--- !u!114 &1524264768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1524264758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0cf00410e2b638438f3adfaff5b1d57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _vampirismRange: 4
 --- !u!1001 &1563110293
 PrefabInstance:
   m_ObjectHideFlags: 0

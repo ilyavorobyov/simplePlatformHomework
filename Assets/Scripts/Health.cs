@@ -7,12 +7,12 @@ public class Health : MonoBehaviour
 
     private float _minHealth = 0;
 
-    private UnityEvent _healthChange = new UnityEvent();
+    private UnityEvent _healthChanged = new UnityEvent();
 
-    public event UnityAction HealthChange
+    public event UnityAction HealthChanged
     {
-        add => _healthChange.AddListener(value);
-        remove => _healthChange.RemoveListener(value);
+        add => _healthChanged.AddListener(value);
+        remove => _healthChanged.RemoveListener(value);
     }
 
     public float MaxHealth => _health;
@@ -26,7 +26,7 @@ public class Health : MonoBehaviour
     public void TakeDamage(int damage)
     {
         CurrentHealth -= damage;
-        _healthChange.Invoke();
+        _healthChanged.Invoke();
 
         if (CurrentHealth <= _minHealth)
         {
@@ -39,7 +39,7 @@ public class Health : MonoBehaviour
         if (CurrentHealth + addingHealth <= MaxHealth)
         {
             CurrentHealth += addingHealth;
-            _healthChange.Invoke();
+            _healthChanged.Invoke();
         }
     }
 }
