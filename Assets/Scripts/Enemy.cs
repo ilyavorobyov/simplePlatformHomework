@@ -112,12 +112,9 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(int damage)
     {
         _health -= damage;
-        Debug.Log(_health);
-        Debug.Log($"Игрок нанёс {damage} урона врагу");
 
         if (_health <= 0)
         {
-            Debug.Log("враг погиб");
             Destroy(gameObject);
         }
     }
