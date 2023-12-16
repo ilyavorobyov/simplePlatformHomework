@@ -22,9 +22,7 @@ public class VampirismAbility : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            Enemy enemy = TrySearchEnemy();
-
-            if (enemy != null)
+            if (TrySearchEnemy(out Enemy enemy))
             {
                 StopDrainHealth();
                 _drainHealth = StartCoroutine(DrainHealth(enemy));
@@ -45,27 +43,30 @@ public class VampirismAbility : MonoBehaviour
         }
     }
 
-    private Enemy TrySearchEnemy()
+    private bool TrySearchEnemy(out Enemy enemy)
     {
         Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, _vampirismRange);
         List<Enemy> enemiesWithinAbilityRange = new List<Enemy>();
 
         foreach (var hitCollider in hitColliders)
         {
-            if (hitCollider.transform.TryGetComponent(out Enemy enemy))
+            if (hitCollider.transform.TryGetComponent(out Enemy enemyTemplate))
             {
-                enemiesWithinAbilityRange.Add(enemy);
+                enemiesWithinAbilityRange.Add(enemyTemplate);
             }
         }
 
         if (enemiesWithinAbilityRange.Count > 0)
         {
-            Enemy nearestEnemy = enemiesWithinAbilityRange.OrderBy(enemy =>
+            enemy = enemiesWithinAbilityRange.OrderBy(enemy =>
             Vector3.Distance(enemy.transform.position, transform.position)).FirstOrDefault();
-            return nearestEnemy;
+            return true;
         }
-
-        return null;
+        else
+        {
+            enemy = null;
+            return false;
+        }
     }
 
     private IEnumerator DrainHealth(Enemy enemy)
@@ -73,9 +74,13 @@ public class VampirismAbility : MonoBehaviour
         float iterationTime = 0.4f;
         float currentDrainingTime = 0;
         var waitForSeconds = new WaitForSeconds(iterationTime);
+        float abilityRange = 3;
+        float distance = Vector3.Distance(enemy.transform.position, transform.position);
 
-        while (enemy.isActiveAndEnabled && currentDrainingTime < _vampirismDuration)
+        while (enemy.isActiveAndEnabled && currentDrainingTime < _vampirismDuration &&
+            distance <= abilityRange)
         {
+            distance = Vector3.Distance(enemy.transform.position, transform.position);
             enemy.TakeDamage(_drainingHealthPerIteration);
             health.AddHealth(_drainingHealthPerIteration);
             currentDrainingTime += iterationTime;
